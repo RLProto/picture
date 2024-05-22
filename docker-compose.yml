@@ -22,4 +22,4 @@ volumes:
   cozinhador:
 
     #devices:
-      "/dev/video0:/dev/video0"  # Grants the container access to the video device
+      #"/dev/video0:/dev/video0"  # Grants the container access to the video device
