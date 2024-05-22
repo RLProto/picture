@@ -1,0 +1,10 @@
+# For docker run
+docker run --device /dev/video0:/dev/video0 -it your_image_name python capture_image.py
+
+# For docker-compose.yml
+services:
+  your_service:
+    image: your_image_name
+    devices:
+      - "/dev/video0:/dev/video0"
+    command: python capture_image.py
