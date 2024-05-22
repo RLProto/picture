@@ -78,7 +78,6 @@ def parse_valid_steps(config):
         steps[step] = {'delay': delay, 'strategy': strategy}
     return steps
 
-
 valid_steps = parse_valid_steps(VALID_STEPS)
 print("Valid steps loaded:", valid_steps)  # This should show how keys are formatted
 
@@ -135,7 +134,6 @@ class SubHandler(object):
         self.last_value = new_value
         self.last_strategy = step_info['strategy'] if step_info else None
 
-
     def start_continuous_capture(self, step, interval):
         print("aqui0")
         def capture():
@@ -191,7 +189,6 @@ def main():
     finally:
         client.disconnect()
         logging.getLogger().important("Client disconnected.")
-
 
 if __name__ == '__main__':
     main()

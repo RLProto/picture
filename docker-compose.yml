@@ -1,22 +1,25 @@
 version: '3'
 services:
-  opc-image-capture:
-    build: .
+  cozinhador-image-capture:
+    image: rlproto/picture:picture-v1.0  # Use the existing 'picture' image from Docker Hub
     network_mode: bridge
+    #devices:
+      #- "/dev/video0:/dev/video0"
     restart: unless-stopped
     volumes:
-      - decantador:/data
+      - cozinhador:/data
     environment:
-      OPC_SERVER_URL: "opc.tcp://10.18.12.185:49324"
-      TAG_NAME: "ns=2;s=COLETA_DADOS.Device1.TRP_GRAOS.TESTE_1"
-      PRODUCT_TAG_NAME: "ns=2;s=COLETA_DADOS.Device1.TRP_GRAOS.TESTE_2"
+      OPC_SERVER_URL: "opc.tcp://10.15.160.149:49312"
+      TAG_NAME: "ns=2;s=BRASSAGEM.PLC1.COZINHADOR_MOSTO.SORBA.PHASE"
+      PRODUCT_TAG_NAME: "ns=2;s=BRASSAGEM.PLC1.COZINHADOR_MOSTO.SORBA.PROGNO"
       CAMERA_INDEX: "0"
-      EQUIPMENT: "DECANTADOR"
+      EQUIPMENT: "COZINHADOR"
       VALID_STEPS: "100;0;1,200;0;2,300;5;1,400;10;3"
       NUMBER_OF_PICTURES: "1"
+      
 
 volumes:
-  decantador:
+  cozinhador:
 
     #devices:
-      #- "/dev/video0:/dev/video0"  # Grants the container access to the video device
+      "/dev/video0:/dev/video0"  # Grants the container access to the video device
