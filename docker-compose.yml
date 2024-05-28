@@ -1,7 +1,7 @@
 version: '3'
 services:
   decantador:
-    name: decantador
+    container_name: decantador
     image: rlproto/picture:picture-v1.0  # Use the existing 'picture' image from Docker Hub
     network_mode: bridge
     devices:
