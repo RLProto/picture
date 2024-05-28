@@ -20,34 +20,41 @@ def ensure_directory(path):
         logging.debug(f"Directory already exists: {path}")
 
 def take_picture():
-    """Captures a single picture and saves it to a file."""
     directory_path = os.path.join(BASE_IMAGE_SAVE_PATH, EQUIPMENT, 'test_capture')
     ensure_directory(directory_path)
     
-    # Start video capture
+    # Initialize video capture
     cap = cv2.VideoCapture(CAMERA_INDEX)
     if not cap.isOpened():
         logging.error("Failed to open video device.")
         return False
 
-    try:
-        ret, frame = cap.read()
-        if ret:
-            timestamp = datetime.now().strftime("%d.%m.%Y_%H.%M.%S")
-            image_path = os.path.join(directory_path, f'{timestamp}.png')
-            if cv2.imwrite(image_path, frame):
-                logging.info(f"Image successfully saved: {image_path}")
-            else:
-                logging.error("Failed to save image using cv2.imwrite.")
-            return True
-        else:
-            logging.error("Failed to capture image from camera.")
-            return False
-    except Exception as e:
-        logging.error(f"An exception occurred while capturing or saving the image: {e}")
-        return False
-    finally:
+    # Set the camera resolution
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+
+    # Try capturing a frame to see if the resolution is set
+    ret, frame = cap.read()
+    if not ret:
+        logging.error("Failed to capture image from camera.")
         cap.release()
+        return False
+
+    # Log the actual resolution obtained
+    actual_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+    actual_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    logging.info(f"Attempting to capture at resolution: 1920x1080, Actual resolution: {actual_width}x{actual_height}")
+
+    # Proceed with capturing and saving the image
+    timestamp = datetime.now().strftime("%d.%m.%Y_%H.%M.%S")
+    image_path = os.path.join(directory_path, f'{timestamp}.png')
+    if cv2.imwrite(image_path, frame):
+        logging.info(f"Image successfully saved: {image_path}")
+    else:
+        logging.error("Failed to save image using cv2.imwrite.")
+    cap.release()
+    return True
+
 
 if __name__ == "__main__":
     result = take_picture()
