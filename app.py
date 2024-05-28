@@ -47,6 +47,10 @@ def take_pictures(step, is_product_change=False):
     if not cap.isOpened():
         logging.getLogger().important("Failed to open video device.")
         return
+    
+    # Set resolution to 1920x1080 or the maximum supported by your camera
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
     try:
         for i in range(NUMBER_OF_PICTURES):
