@@ -18,7 +18,6 @@ services:
       VALID_STEPS: "2;0;1,5;0;1,13;0;1"
       NUMBER_OF_PICTURES: "5"
       
-
       #100;0;1
       #100 -> PASSO
       #0 -> DELAY OU INTERVALO
@@ -27,12 +26,9 @@ services:
       #STRATÉGIA:
       #1 -> ENTRADA DO PASSO
       #2 -> SAÍDA DO PASSO
-      #3 -> INTERVALOR DE TEMPO DURANTE O PASSO
+      #3 -> INTERVALO DE TEMPO DURANTE O PASSO
 
       #1 -> ENTRADA DO PASSO COM DELAY
 
 volumes:
   decantador:
-
-    #devices:
-      #"/dev/video0:/dev/video0"  # Grants the container access to the video device
