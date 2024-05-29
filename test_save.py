@@ -24,11 +24,11 @@ def take_picture():
     ensure_directory(directory_path)
     
     # Initialize video capture
-    cap = cv2.VideoCapture(CAMERA_INDEX)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     if not cap.isOpened():
         logging.error("Failed to open video device.")
         return False
-
+    
     # Set the camera resolution
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)

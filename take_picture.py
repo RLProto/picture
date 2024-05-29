@@ -2,7 +2,7 @@ import cv2
 
 def capture_image():
     # Start capturing video input from the webcam
-    cap = cv2.VideoCapture(0)  # The argument 0 indicates /dev/video0
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # The argument 0 indicates /dev/video0
 
     # Set resolution to 1920x1080 or the maximum supported by your camera
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)

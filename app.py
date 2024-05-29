@@ -42,7 +42,7 @@ def take_pictures(step, is_product_change=False):
     directory_suffix = "CIP" if is_product_change else step
     directory_path = os.path.join(BASE_IMAGE_SAVE_PATH, EQUIPMENT, directory_suffix)
     ensure_directory(directory_path)
-    cap = cv2.VideoCapture(CAMERA_INDEX)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
     if not cap.isOpened():
         logging.getLogger().important("Failed to open video device.")
