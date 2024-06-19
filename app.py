@@ -71,10 +71,9 @@ def take_pictures(step, is_product_change=False):
         logging.error("Video device is not initialized or has been closed.")
         return
     
-    for _ in range(10):
-        cap.read()
-
-
+    #for _ in range(20):
+        #cap.read()
+        
     #cap.set(cv2.CAP_PROP_AUTO_WB,0)
     #cap.set(cv2.CAP_PROP_WB_TEMPERATURE,2000)
 
