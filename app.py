@@ -38,24 +38,45 @@ if (NUMBER_OF_PICTURES >10):
 
 # Base directory to save images
 BASE_IMAGE_SAVE_PATH = './data'
-#BASE_IMAGE_SAVE_PATH = 'D:/Python/picture/data'  # Adjust the path as necessary
+
 def ensure_directory(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-def take_pictures(step, is_product_change=False):
-    directory_suffix = "CIP" if is_product_change else step
-    directory_path = os.path.join(BASE_IMAGE_SAVE_PATH, EQUIPMENT, directory_suffix)
-    ensure_directory(directory_path)
-    cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
+global cap
+cap = None
 
-    if not cap.isOpened():
-        logging.getLogger().important("Failed to open video device.")
-        return
-    
+def initialize_camera():
+    print('here')
+    global cap
+    cap =cv2.VideoCapture(0,cv2.CAP_V4L2)
+
     # Set resolution to 1920x1080 or the maximum supported by your camera
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+    cap.read()
+
+    if not cap.isOpened():
+        logging.error("Failed to open video device.")
+        return False
+
+def take_pictures(step, is_product_change=False):
+
+    directory_suffix = "CIP" if is_product_change else step
+    directory_path = os.path.join(BASE_IMAGE_SAVE_PATH, EQUIPMENT, directory_suffix)
+    ensure_directory(directory_path)
+
+    global cap
+    if cap is None or not cap.isOpened():
+        logging.error("Video device is not initialized or has been closed.")
+        return
+    
+    for _ in range(10):
+        cap.read()
+
+
+    #cap.set(cv2.CAP_PROP_AUTO_WB,0)
+    #cap.set(cv2.CAP_PROP_WB_TEMPERATURE,2000)
 
     try:
         for i in range(NUMBER_OF_PICTURES):
@@ -74,7 +95,8 @@ def take_pictures(step, is_product_change=False):
     except Exception as e:
         logging.getLogger().important(f"Error during image capture or save: {e}")
     finally:
-        cap.release()
+        print("fim")
+        #cap.release()
 
 def parse_valid_steps(config):
     steps = {}
@@ -144,12 +166,10 @@ class SubHandler(object):
         self.last_strategy = step_info['strategy'] if step_info else None
 
     def start_continuous_capture(self, step, interval):
-        print("aqui0")
         def capture():
             print(self.last_value)
             print(step)
             #if self.last_value == step:  # Continue capturing if the step hasn't changed
-            print("aqui1")
             take_pictures(step)
             self.active_timer = Timer(interval, capture)
             self.active_timer.start()
@@ -181,7 +201,6 @@ def connect_to_opcua():
 
         client = Client(OPC_SERVER_URL)
         try:
-            print("try")
             client.connect()
             logging.getLogger().important(f"Connected to {OPC_SERVER_URL}")
             tag_node = client.get_node(TAG_NAME)
@@ -203,7 +222,6 @@ def connect_to_opcua():
                     break
         except Exception as e:
             logging.error(f"An error occurred: {e}")
-            print("etro")
             time.sleep(15) #wait for 15 seconds before trying to reconect
         finally:
             try:
@@ -213,8 +231,9 @@ def connect_to_opcua():
                 pass
 
 def main():
-    print("main")
+    initialize_camera()
     connect_to_opcua()
+    cap.release()
 
 if __name__ == '__main__':
     main()

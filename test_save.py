@@ -28,11 +28,16 @@ def take_picture():
     if not cap.isOpened():
         logging.error("Failed to open video device.")
         return False
-    
+
+
+    #cap.set(cv2.CAP_PROP_AUTO_WB,0)
+    cap.set(cv2.CAP_PROP_WB_TEMPERATURE,2000)
+
     # Set the camera resolution
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-
+    cap.set(cv2.CAP_PROP_WB_TEMPERATURE,2000)
+    
     # Try capturing a frame to see if the resolution is set
     ret, frame = cap.read()
     if not ret:
