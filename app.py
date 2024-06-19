@@ -2,7 +2,7 @@ import os
 import time
 import cv2
 import logging
-from opcua import Client
+from opcua import Client, ua
 from threading import Timer
 
 # Define a custom logging level
@@ -20,16 +20,21 @@ logging.Logger.important = important
 logging.basicConfig(level=IMPORTANT, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Environment variables
-OPC_SERVER_URL = os.getenv('OPC_SERVER_URL', 'opc.tcp://10.18.12.185:49324')
-TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=COLETA_DADOS.Device1.TRP_GRAOS.TESTE_1')
-PRODUCT_TAG_NAME = os.getenv('PRODUCT_TAG_NAME', 'ns=2;s=COLETA_DADOS.Device1.TRP_GRAOS.TESTE_2')
+# OPC_SERVER_URL = os.getenv('OPC_SERVER_URL', 'opc.tcp://10.18.12.185:49324')
+# TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=COLETA_DADOS.Device1.TRP_GRAOS.TESTE_1')
+# PRODUCT_TAG_NAME = os.getenv('PRODUCT_TAG_NAME', 'ns=2;s=COLETA_DADOS.Device1.TRP_GRAOS.TESTE_2')
+
+OPC_SERVER_URL = os.getenv('OPC_SERVER_URL', 'opc.tcp://10.15.160.149:49312')
+#TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=BRASSAGEM.PLC1.WHIRLPOOL.SORBA.PHASE')
+TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO')
+PRODUCT_TAG_NAME = os.getenv('PRODUCT_TAG_NAME', 'ns=2;s=BRASSAGEM.PLC1.WHIRLPOOL.SORBA.PROGNO')
 CAMERA_INDEX = int(os.getenv('CAMERA_INDEX', 0))
 EQUIPMENT = os.getenv('EQUIPMENT', 'DECANTADOR')
-VALID_STEPS = os.getenv('VALID_STEPS', "100;0;1,200;0;2,300;5;1,400;10;3")
-NUMBER_OF_PICTURES = int(os.getenv('NUMBER_OF_PICTURES', 1))
+VALID_STEPS = os.getenv('VALID_STEPS', "1;0;1,2;0;1,3;0;1,4;0;1,5;0;1,6;0;1,12;30;2")
+NUMBER_OF_PICTURES = int(os.getenv('NUMBER_OF_PICTURES', 10))
 
-if (NUMBER_OF_PICTURES >5):
-    NUMBER_OF_PICTURES = 5
+if (NUMBER_OF_PICTURES >10):
+    NUMBER_OF_PICTURES = 10
 
 # Base directory to save images
 BASE_IMAGE_SAVE_PATH = './data'
@@ -42,7 +47,7 @@ def take_pictures(step, is_product_change=False):
     directory_suffix = "CIP" if is_product_change else step
     directory_path = os.path.join(BASE_IMAGE_SAVE_PATH, EQUIPMENT, directory_suffix)
     ensure_directory(directory_path)
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
 
     if not cap.isOpened():
         logging.getLogger().important("Failed to open video device.")
@@ -171,28 +176,45 @@ class SubHandler(object):
             logging.getLogger().important(f"Data change on {node}: New value = {new_value}")
             self.handle_value_change(new_value)
 
-def main():
-    client = Client(OPC_SERVER_URL)
-    try:
-        client.connect()
-        logging.getLogger().important(f"Connected to {OPC_SERVER_URL}")
-        tag_node = client.get_node(TAG_NAME)
-        product_node = client.get_node(PRODUCT_TAG_NAME)
-        handler = SubHandler()
-        sub = client.create_subscription(500, handler)
-        sub.subscribe_data_change(tag_node)
-        sub.subscribe_data_change(product_node)
-        logging.getLogger().important("Subscription created, waiting for events...")
-        
-       # Infinite loop to keep script running
-        while True:
-            time.sleep(1)
+def connect_to_opcua():
+    while True:
 
-    except Exception as e:
-        logging.error(f"An error occurred: {e}")
-    finally:
-        client.disconnect()
-        logging.getLogger().important("Client disconnected.")
+        client = Client(OPC_SERVER_URL)
+        try:
+            print("try")
+            client.connect()
+            logging.getLogger().important(f"Connected to {OPC_SERVER_URL}")
+            tag_node = client.get_node(TAG_NAME)
+            product_node = client.get_node(PRODUCT_TAG_NAME)
+            handler = SubHandler()
+            sub = client.create_subscription(500, handler)
+            sub.subscribe_data_change(tag_node)
+            sub.subscribe_data_change(product_node)
+            logging.getLogger().important("Subscription created, waiting for events...")
+            
+        # Infinite loop to keep script running
+            while True:
+                try:
+                    # Test the connection by reading a value
+                    tag_node.get_value()
+                    time.sleep(1)
+                except ua.UaStatusCodeError:
+                    logging.error("Lost connection to OPA UA server. Trying to reconect...")
+                    break
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")
+            print("etro")
+            time.sleep(15) #wait for 15 seconds before trying to reconect
+        finally:
+            try:
+                client.disconnect()
+                logging.getLogger().important("Client disconnected.")
+            except:
+                pass
+
+def main():
+    print("main")
+    connect_to_opcua()
 
 if __name__ == '__main__':
     main()

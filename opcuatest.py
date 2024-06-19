@@ -1,8 +1,11 @@
 import time
 from opcua import Client, ua
 
-server_url = 'opc.tcp://10.18.12.185:49324'
-tag_path = "ns=2;s=PROCESSO.PLC.MACERACAO.TEMPERATURA_SUPERIOR_M2"
+#server_url = 'opc.tcp://10.18.12.185:49324'
+#tag_path = "ns=2;s=PROCESSO.PLC.MACERACAO.TEMPERATURA_SUPERIOR_M2"
+
+server_url = 'opc.tcp://10.15.160.149:49312'
+tag_path = "ns=2;s=BRASSAGEM.PLC1.WHIRLPOOL.SORBA.PHASE"
 
 class SubHandler(object):
     """

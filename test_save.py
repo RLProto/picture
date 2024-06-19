@@ -24,7 +24,7 @@ def take_picture():
     ensure_directory(directory_path)
     
     # Initialize video capture
-    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
     if not cap.isOpened():
         logging.error("Failed to open video device.")
         return False
