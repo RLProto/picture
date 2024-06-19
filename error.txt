@@ -1,0 +1,72 @@
+2024-06-19 14:37:49,037 - WARNING - Requested session timeout to be 3600000ms, got 60000ms instead
+2024-06-19 14:37:49,046 - IMPORTANT - Connected to opc.tcp://10.15.160.149:49312
+2024-06-19 14:37:49,068 - IMPORTANT - Subscription created, waiting for events...
+2024-06-19 14:37:49,555 - IMPORTANT - Data change on ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO: New value = 2.0
+Handling value change for: 2.0
+Step info: {'delay': 0.0, 'strategy': 1}
+2024-06-19 14:37:56,550 - IMPORTANT - Data change on ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO: New value = 1.0
+Handling value change for: 1.0
+Step info: {'delay': 0.0, 'strategy': 1}
+2024-06-19 14:37:58,255 - IMPORTANT - Image successfully saved: ./data/DECANTADOR/1.0/19.06.2024_14.37.58_0.png
+2024-06-19 14:37:59,497 - IMPORTANT - Image successfully saved: ./data/DECANTADOR/1.0/19.06.2024_14.37.59_1.png
+2024-06-19 14:38:00,730 - IMPORTANT - Image successfully saved: ./data/DECANTADOR/1.0/19.06.2024_14.38.00_2.png
+2024-06-19 14:38:01,237 - ERROR - An error occurred
+Traceback (most recent call last):
+  File "/home/admin/Desktop/python/picture/app.py", line 218, in connect_to_opcua
+    tag_node.get_value()
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/common/node.py", line 155, in get_value
+    result = self.get_data_value()
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/common/node.py", line 164, in get_data_value
+    return self.get_attribute(ua.AttributeIds.Value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/common/node.py", line 275, in get_attribute
+    result = self.server.read(params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/client/ua_client.py", line 347, in read
+    data = self._uasocket.send_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/client/ua_client.py", line 83, in send_request
+    data = future.result(self.timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/concurrent/futures/_base.py", line 458, in result
+    raise TimeoutError()
+TimeoutError
+2024-06-19 14:38:01,956 - IMPORTANT - Image successfully saved: ./data/DECANTADOR/1.0/19.06.2024_14.38.01_3.png
+2024-06-19 14:38:03,187 - IMPORTANT - Image successfully saved: ./data/DECANTADOR/1.0/19.06.2024_14.38.02_4.png
+2024-06-19 14:38:04,435 - IMPORTANT - Image successfully saved: ./data/DECANTADOR/1.0/19.06.2024_14.38.04_5.png
+2024-06-19 14:38:05,652 - IMPORTANT - Image successfully saved: ./data/DECANTADOR/1.0/19.06.2024_14.38.05_6.png
+2024-06-19 14:38:06,861 - IMPORTANT - Image successfully saved: ./data/DECANTADOR/1.0/19.06.2024_14.38.06_7.png
+2024-06-19 14:38:08,152 - IMPORTANT - Image successfully saved: ./data/DECANTADOR/1.0/19.06.2024_14.38.07_8.png
+2024-06-19 14:38:09,396 - IMPORTANT - Image successfully saved: ./data/DECANTADOR/1.0/19.06.2024_14.38.09_9.png
+fim
+2024-06-19 14:38:16,251 - WARNING - ServiceFault from server received while waiting for publish response
+2024-06-19 14:38:16,252 - ERROR - exception calling callback for <Future at 0x7fa4c21010 state=finished returned Buffer>
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/concurrent/futures/_base.py", line 340, in _invoke_callbacks
+    callback(self)
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/client/ua_client.py", line 493, in _call_publish_callback
+    self._uasocket.check_answer(data, "while waiting for publish response")
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/client/ua_client.py", line 93, in check_answer
+    hdr.ServiceResult.check()
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/ua/uatypes.py", line 218, in check
+    raise UaStatusCodeError(self.value)
+opcua.ua.uaerrors._auto.BadSessionClosed: "The session was closed by the client."(BadSessionClosed)
+2024-06-19 14:38:16,255 - WARNING - ServiceFault from server received while waiting for publish response
+2024-06-19 14:38:16,255 - ERROR - exception calling callback for <Future at 0x7fa4c23010 state=finished returned Buffer>
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/concurrent/futures/_base.py", line 340, in _invoke_callbacks
+    callback(self)
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/client/ua_client.py", line 493, in _call_publish_callback
+    self._uasocket.check_answer(data, "while waiting for publish response")
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/client/ua_client.py", line 93, in check_answer
+    hdr.ServiceResult.check()
+  File "/home/admin/Desktop/python/picture/myenv/lib/python3.11/site-packages/opcua/ua/uatypes.py", line 218, in check
+    raise UaStatusCodeError(self.value)
+opcua.ua.uaerrors._auto.BadSessionClosed: "The session was closed by the client."(BadSessionClosed)
+2024-06-19 14:38:16,258 - IMPORTANT - Client disconnected.
+2024-06-19 14:38:16,365 - WARNING - Requested session timeout to be 3600000ms, got 60000ms instead
+2024-06-19 14:38:16,377 - IMPORTANT - Connected to opc.tcp://10.15.160.149:49312
+2024-06-19 14:38:16,405 - IMPORTANT - Subscription created, waiting for events...
+2024-06-19 14:38:16,895 - IMPORTANT - Data change on ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO: New value = 1.0
+Handling value change for: 1.0

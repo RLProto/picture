@@ -221,7 +221,7 @@ def connect_to_opcua():
                     logging.error("Lost connection to OPA UA server. Trying to reconect...")
                     break
         except Exception as e:
-            logging.error(f"An error occurred: {e}")
+            logging.exception(f"An error occurred")
             time.sleep(15) #wait for 15 seconds before trying to reconect
         finally:
             try:
