@@ -17,7 +17,7 @@ def capture_image():
 
     if ret:
         # Save the captured image to a file
-        cv2.imwrite('captured_image.jpg', frame)
+        cv2.imwrite('captured_image4.jpg', frame)
         print("Image saved successfully")
     else:
         print("Failed to capture image")

@@ -25,8 +25,8 @@ logging.basicConfig(level=IMPORTANT, format='%(asctime)s - %(levelname)s - %(mes
 # PRODUCT_TAG_NAME = os.getenv('PRODUCT_TAG_NAME', 'ns=2;s=COLETA_DADOS.Device1.TRP_GRAOS.TESTE_2')
 
 OPC_SERVER_URL = os.getenv('OPC_SERVER_URL', 'opc.tcp://10.15.160.149:49312')
-#TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=BRASSAGEM.PLC1.WHIRLPOOL.SORBA.PHASE')
-TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO')
+TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=BRASSAGEM.PLC1.WHIRLPOOL.SORBA.PHASE')
+#TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO')
 PRODUCT_TAG_NAME = os.getenv('PRODUCT_TAG_NAME', 'ns=2;s=BRASSAGEM.PLC1.WHIRLPOOL.SORBA.PROGNO')
 CAMERA_INDEX = int(os.getenv('CAMERA_INDEX', 0))
 EQUIPMENT = os.getenv('EQUIPMENT', 'DECANTADOR')
@@ -54,7 +54,6 @@ def initialize_camera():
     # Set resolution to 1920x1080 or the maximum supported by your camera
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-    cap.read()
 
     if not cap.isOpened():
         logging.error("Failed to open video device.")
@@ -77,6 +76,9 @@ def take_pictures(step, is_product_change=False):
     #cap.set(cv2.CAP_PROP_AUTO_WB,0)
     #cap.set(cv2.CAP_PROP_WB_TEMPERATURE,2000)
 
+    for _ in range(10):
+        cap.read()
+
     try:
         for i in range(NUMBER_OF_PICTURES):
             ret, frame = cap.read()
@@ -88,7 +90,7 @@ def take_pictures(step, is_product_change=False):
                     logging.getLogger().important(f"Image successfully saved: {image_path}")
                 except Exception as e:
                     logging.getLogger().important(f"Failed to save image: {e}")
-                time.sleep(1)
+                time.sleep(0.2)
             else:
                 logging.getLogger().important("Failed to capture image")
     except Exception as e:
