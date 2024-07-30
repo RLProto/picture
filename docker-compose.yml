@@ -1,26 +1,25 @@
 version: '3'
 services:
   cozinhador:
-    container_name: cozinhador
+    container_name: tina_mostura
     image: rlproto/picture:picture-v1.7  # Use the existing 'picture' image from Docker Hub
     network_mode: bridge
     devices:
       - "/dev/video0:/dev/video0"
     restart: unless-stopped
     volumes:
-      #- cozinhador:/data
-      - /var/lib/docker/volumes/picture_cozinhador:/app/data
+      - /var/lib/docker/volumes/picture_tina_mostura:/app/data
     environment:
       OPC_SERVER_URL: "opc.tcp://10.15.160.149:49312"
-      #TAG_NAME: "ns=2;s=BRASSAGEM.PLC1.COZINHADOR_MOSTO.SORBA.PHASE"
-      TAG_NAME: "ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO"
-      PRODUCT_TAG_NAME: "ns=2;s=BRASSAGEM.PLC1.COZINHADOR_MOSTO.SORBA.PROGNO"
+      TAG_NAME: "ns=2;s=BRASSAGEM.PLC1.TINA_MOSTURA.SORBA.PHASE"
+      #TAG_NAME: "ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO"
+      PRODUCT_TAG_NAME: "ns=2;s=BRASSAGEM.PLC1.TINA_MOSTURA.SORBA.PROGNO"
       CAMERA_INDEX: "0"
-      EQUIPMENT: "cozinhador"
-      VALID_STEPS: "2;15;3,3;0;1,5;120;3,6;180;3,8;15;3,9;0;1,9;0;2"
-      NUMBER_OF_PICTURES: "2"
-    
-      #TINA "2;0;1,4;60;3,6;60;3,8;60;3,13;60;3,14;0;1,15;0;1,16;0;1"
+      EQUIPMENT: "tina_mostura"
+      VALID_STEPS: "2;0;1,4;60;3,6;60;3,8;60;3,13;60;3,14;0;1,15;0;1,16;0;1"
+      NUMBER_OF_PICTURES: "10"
+
+      # COZINHADOR VALID_STEPS: "2;15;3,3;0;1,5;120;3,6;180;3,8;15;3,9;0;1,9;0;2"
       #NUMBER_OF_PICTURES: "5"
       
       #100;0;1
