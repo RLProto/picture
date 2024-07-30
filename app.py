@@ -19,11 +19,6 @@ logging.Logger.important = important
 # Set up logging to use the custom level
 logging.basicConfig(level=IMPORTANT, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Environment variables
-# OPC_SERVER_URL = os.getenv('OPC_SERVER_URL', 'opc.tcp://10.18.12.185:49324')
-# TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=COLETA_DADOS.Device1.TRP_GRAOS.TESTE_1')
-# PRODUCT_TAG_NAME = os.getenv('PRODUCT_TAG_NAME', 'ns=2;s=COLETA_DADOS.Device1.TRP_GRAOS.TESTE_2')
-
 OPC_SERVER_URL = os.getenv('OPC_SERVER_URL', 'opc.tcp://10.15.160.149:49312')
 TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=BRASSAGEM.PLC1.WHIRLPOOL.SORBA.PHASE')
 TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO')
