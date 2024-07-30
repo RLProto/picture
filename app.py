@@ -26,11 +26,13 @@ logging.basicConfig(level=IMPORTANT, format='%(asctime)s - %(levelname)s - %(mes
 
 OPC_SERVER_URL = os.getenv('OPC_SERVER_URL', 'opc.tcp://10.15.160.149:49312')
 TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=BRASSAGEM.PLC1.WHIRLPOOL.SORBA.PHASE')
-#TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO')
+TAG_NAME = os.getenv('TAG_NAME', 'ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO')
 PRODUCT_TAG_NAME = os.getenv('PRODUCT_TAG_NAME', 'ns=2;s=BRASSAGEM.PLC1.WHIRLPOOL.SORBA.PROGNO')
 CAMERA_INDEX = int(os.getenv('CAMERA_INDEX', 0))
 EQUIPMENT = os.getenv('EQUIPMENT', 'DECANTADOR')
-VALID_STEPS = os.getenv('VALID_STEPS', "1;0;1,2;0;1,3;0;1,4;0;1,5;0;1,6;0;1,12;30;2")
+#VALID_STEPS = os.getenv('VALID_STEPS', "1;0;1,2;0;1,3;0;1,4;0;1,5;0;1,6;0;1,12;30;2")
+VALID_STEPS = os.getenv('VALID_STEPS', "2;15;3,3;0;1,5;12;3,6;180;3,8;15;3,9;0;1,9;0;2")
+
 NUMBER_OF_PICTURES = int(os.getenv('NUMBER_OF_PICTURES', 10))
 
 if (NUMBER_OF_PICTURES >10):
@@ -45,6 +47,8 @@ def ensure_directory(path):
 
 global cap
 cap = None
+global step
+step = None
 
 def initialize_camera():
     print('here')
@@ -69,12 +73,6 @@ def take_pictures(step, is_product_change=False):
     if cap is None or not cap.isOpened():
         logging.error("Video device is not initialized or has been closed.")
         return
-    
-    #for _ in range(20):
-        #cap.read()
-        
-    #cap.set(cv2.CAP_PROP_AUTO_WB,0)
-    #cap.set(cv2.CAP_PROP_WB_TEMPERATURE,2000)
 
     for _ in range(10):
         cap.read()
@@ -97,8 +95,7 @@ def take_pictures(step, is_product_change=False):
         logging.getLogger().important(f"Error during image capture or save: {e}")
     finally:
         print("fim")
-        #cap.release()
-
+        
 def parse_valid_steps(config):
     steps = {}
     entries = config.split(',')
@@ -130,6 +127,8 @@ class SubHandler(object):
             logging.getLogger().important("Cancelled previous timer due to new valid step.")
 
         step_key = f"{float(new_value):.1f}"
+        global step
+        step = step_key
         step_info = valid_steps.get(step_key)
         print("Step info:", step_info)
 
@@ -161,21 +160,28 @@ class SubHandler(object):
                 # No action needed here if not entering from another Strategy 2 step
                 pass
             elif strategy == 3:
-                self.start_continuous_capture(step_key, delay)
+                self.start_continuous_capture(delay)
 
         self.last_value = new_value
         self.last_strategy = step_info['strategy'] if step_info else None
 
-    def start_continuous_capture(self, step, interval):
+    def start_continuous_capture(self, interval):
+        first_enter = True
         def capture():
-            print(self.last_value)
-            print(step)
-            #if self.last_value == step:  # Continue capturing if the step hasn't changed
-            take_pictures(step)
-            self.active_timer = Timer(interval, capture)
-            self.active_timer.start()
+            nonlocal first_enter
+            global step
+            print(f"Current last_value: {self.last_value}, Target step: {step}")
+            if float(self.last_value) == float(step) or first_enter:
+                take_pictures(step)
+                self.active_timer = Timer(interval, capture)
+                self.active_timer.start()
+                first_enter = False
+            else:
+                print("Stopping capture as conditions are not met.")
+                self.active_timer.cancel()
 
         capture()
+
 
     def handle_product_change(self, product_value):
         if not self.initial_product_change:  # Check if it's the first product change
