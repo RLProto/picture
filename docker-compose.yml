@@ -11,9 +11,9 @@ services:
       - /var/lib/docker/volumes/picture_tina_mostura:/app/data
     environment:
       OPC_SERVER_URL: "opc.tcp://10.15.160.149:49312"
-      TAG_NAME: "ns=2;s=BRASSAGEM.PLC1.TINA_MOSTURA.SORBA.PHASE"
+      TAG_NAME: "ns=2;s=BRASSAGEM.PLC1.TINA_MOSTURA.PHASE"
       #TAG_NAME: "ns=2;s=SODA_TEMPLATE.FILTRACAO.RASP_PASSO"
-      PRODUCT_TAG_NAME: "ns=2;s=BRASSAGEM.PLC1.TINA_MOSTURA.SORBA.PROGNO"
+      PRODUCT_TAG_NAME: "ns=2;s=BRASSAGEM.PLC1.TINA_MOSTURA.PROGNO"
       CAMERA_INDEX: "0"
       EQUIPMENT: "tina_mostura"
       VALID_STEPS: "2;0;1,4;60;3,6;60;3,8;60;3,13;60;3,14;0;1,15;0;1,16;0;1"
