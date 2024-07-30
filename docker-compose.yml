@@ -1,6 +1,6 @@
 version: '3'
 services:
-  cozinhador:
+  tina_mostura:
     container_name: tina_mostura
     image: rlproto/picture:picture-v1.7  # Use the existing 'picture' image from Docker Hub
     network_mode: bridge
